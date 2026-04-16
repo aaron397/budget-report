@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bespoke Budget vs Actuals</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    background: #0f0f0f;
+    color: #e8e8e8;
+    min-height: 100vh;
+    padding: 32px 20px;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+
+  /* Header */
+  .header { margin-bottom: 36px; }
+  .header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: #fff;
+  }
+  .header .meta {
+    font-size: 13px;
+    color: #666;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .header .meta .dot { color: #333; }
+  .live-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 11px;
+    color: #888;
+  }
+  .live-dot {
+    width: 6px; height: 6px;
+    background: #22c55e;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* Section labels */
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #1e1e1e;
+  }
+
+  /* Alert cards */
+  .alerts { margin-bottom: 32px; }
+  .alert-card {
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 10px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    align-items: start;
+    border: 1px solid transparent;
+  }
+  .alert-card.red {
+    background: #1a0a0a;
+    border-color: #3d1010;
+  }
+  .alert-card.yellow {
+    background: #131007;
+    border-color: #2e2408;
+  }
+  .alert-card .project-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .alert-card .client {
+    font-size: 12px;
+    color: #555;
+    margin-bottom: 8px;
+  }
+  .alert-card .numbers {
+    font-size: 13px;
+    color: #aaa;
+    margin-bottom: 6px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .alert-card .numbers span { white-space: nowrap; }
+  .alert-card .numbers strong { color: #e8e8e8; }
+  .alert-card .note {
+    font-size: 12px;
+    color: #666;
+    font-style: italic;
+  }
+  .alert-card .note.red-text { color: #f87171; }
+  .alert-card .note.yellow-text { color: #fbbf24; }
+  .scoro-link {
+    font-size: 11px;
+    color: #444;
+    text-decoration: none;
+    border: 1px solid #222;
+    border-radius: 6px;
+    padding: 5px 10px;
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+  .scoro-link:hover { color: #888; border-color: #444; }
+
+  /* Budget bar */
+  .budget-bar-wrap { margin-top: 10px; }
+  .budget-bar-track {
+    height: 4px;
+    background: #1e1e1e;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .budget-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.3s;
+  }
+  .fill-red { background: #ef4444; }
+  .fill-yellow { background: #f59e0b; }
+  .fill-green { background: #22c55e; }
+  .budget-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: #444;
+    margin-top: 4px;
+  }
+
+  /* Table */
+  .table-section { margin-bottom: 32px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead tr { border-bottom: 1px solid #1e1e1e; }
+  th {
+    text-align: left;
+    padding: 8px 12px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #444;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+  }
+  td { padding: 12px; border-bottom: 1px solid #161616; color: #ccc; vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #111; }
+  .td-project { font-weight: 600; color: #e8e8e8; }
+  .td-client { font-size: 11px; color: #555; }
+  .badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .badge-red { background: #2a0a0a; color: #f87171; }
+  .badge-yellow { background: #1f1507; color: #fbbf24; }
+  .badge-green { background: #071a0e; color: #4ade80; }
+  .badge-gray { background: #1a1a1a; color: #666; }
+
+  /* Mini bar in table */
+  .mini-bar { width: 60px; height: 3px; background: #1e1e1e; border-radius: 2px; display: inline-block; vertical-align: middle; margin-right: 6px; }
+  .mini-fill { height: 100%; border-radius: 2px; display: block; }
+
+  /* Invoiced section */
+  .invoiced-card {
+    background: #111;
+    border: 1px solid #1e1e1e;
+    border-radius: 10px;
+    padding: 14px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .invoiced-card .name { font-size: 13px; font-weight: 600; color: #e8e8e8; }
+  .invoiced-card .sub { font-size: 11px; color: #555; margin-top: 2px; }
+  .invoiced-card .amount { font-size: 14px; font-weight: 700; color: #fbbf24; }
+
+  /* Footer */
+  .footer {
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 1px solid #1a1a1a;
+    font-size: 11px;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer a { color: #444; text-decoration: none; }
+  .footer a:hover { color: #888; }
+
+  .spacer { margin-bottom: 32px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>Budget vs Actuals</h1>
+    <div class="meta">
+      <span>Bespoke Digital</span>
+      <span class="dot">·</span>
+      <span id="report-date">April 17, 2026</span>
+      <span class="dot">·</span>
+      <div class="live-badge">
+        <div class="live-dot"></div>
+        Live from Scoro
+      </div>
+    </div>
+  </div>
+
+  <!-- Red Alerts -->
+  <div class="alerts">
+    <div class="section-label" style="color:#f87171;">🔴 Immediate Attention</div>
+
+    <div class="alert-card red">
+      <div>
+        <div class="project-name">EA HOLIDAY 2026 — STILL &amp; VIDEO</div>
+        <div class="client">Elizabeth Arden</div>
+        <div class="numbers">
+          <span>Budget <strong>$90,000</strong></span>
+          <span>Committed <strong>$90,000</strong></span>
+          <span>Bills In <strong>$34,821</strong></span>
+        </div>
+        <div class="budget-bar-wrap">
+          <div class="budget-bar-track"><div class="budget-bar-fill fill-red" style="width:100%"></div></div>
+          <div class="budget-bar-label"><span>0%</span><span>100% committed</span></div>
+        </div>
+        <div class="note red-text" style="margin-top:8px;">AT BUDGET — ~$55K in costs still outstanding. Change order or scope review needed immediately.</div>
+      </div>
+      <a class="scoro-link" href="https://bespokedigital.scoro.com/projects/view/253" target="_blank">Scoro ↗</a>
+    </div>
+
+    <div class="alert-card red">
+      <div>
+        <div class="project-name">JIMMY MARBLE OLIPOP — AI SET DESIGN</div>
+        <div class="client">Olipop c/o Apostrophe Reps</div>
+        <div class="numbers">
+          <span>Budget <strong>$51,750</strong></span>
+          <span>Committed <strong>$51,250</strong></span>
+          <span>Bills In <strong>$17,507</strong></span>
+        </div>
+        <div class="budget-bar-wrap">
+          <div class="budget-bar-track"><div class="budget-bar-fill fill-red" style="width:99%"></div></div>
+          <div class="budget-bar-label"><span>0%</span><span>99% committed</span></div>
+        </div>
+        <div class="note red-text" style="margin-top:8px;">Only $500 remaining. ~$33.7K in costs still outstanding.</div>
+      </div>
+      <a class="scoro-link" href="https://bespokedigital.scoro.com/projects/view/260" target="_blank">Scoro ↗</a>
+    </div>
+
+    <div class="alert-card red">
+      <div>
+        <div class="project-name">RING SIDEWALK STOCK PHOTO</div>
+        <div class="client">Ring</div>
+        <div class="numbers">
+          <span>Budget <strong>$900</strong></span>
+          <span>Actual Labor <strong>$1,304</strong></span>
+        </div>
+        <div class="budget-bar-wrap">
+          <div class="budget-bar-track"><div class="budget-bar-fill fill-red" style="width:100%"></div></div>
+          <div class="budget-bar-label"><span>0%</span><span>OVER BUDGET</span></div>
+        </div>
+        <div class="note red-text" style="margin-top:8px;">Labor alone exceeds total budget. Needs write-off or retroactive approval.</div>
+      </div>
+      <a class="scoro-link" href="https://bespokedigital.scoro.com/projects/view/143" target="_blank">Scoro ↗</a>
+    </div>
+  </div>
+
+  <!-- Yellow Watch List -->
+  <div class="alerts">
+    <div class="section-label" style="color:#fbbf24;">🟡 Watch List</div>
+
+    <div class="alert-card yellow">
+      <div>
+        <div class="project-name">AMAZON PRIME DAY — DOOH PICKUP</div>
+        <div class="client">Amazon Prime · Due April 30, 2026</div>
+        <div class="numbers">
+          <span>Budget <strong>$10,600</strong></span>
+          <span>Committed <strong>$9,900</strong></span>
+          <span>Bills In <strong>$0</strong></span>
+        </div>
+        <div class="budget-bar-wrap">
+          <div class="budget-bar-track"><div class="budget-bar-fill fill-yellow" style="width:93%"></div></div>
+          <div class="budget-bar-label"><span>0%</span><span>93% committed</span></div>
+        </div>
+        <div class="note yellow-text" style="margin-top:8px;">Nearly fully committed with no bills received. Confirm all costs locked before close.</div>
+      </div>
+      <a class="scoro-link" href="https://bespokedigital.scoro.com/projects/view/265" target="_blank">Scoro ↗</a>
+    </div>
+  </div>
+
+  <!-- Healthy Table -->
+  <div class="table-section">
+    <div class="section-label" style="color:#4ade80;">🟢 Active Projects — Healthy</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Project</th>
+          <th>Budget</th>
+          <th>Committed</th>
+          <th>Bills In</th>
+          <th>Health</th>
+          <th>Due</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="td-project">HP POLY</div><div class="td-client">Caravan Club</div></td>
+          <td>$28,600</td>
+          <td>$16,500</td>
+          <td>$1,663</td>
+          <td>
+            <span class="mini-bar"><span class="mini-fill fill-green" style="width:58%"></span></span>
+            <span class="badge badge-green">58%</span>
+          </td>
+          <td style="color:#555;">May 8</td>
+        </tr>
+        <tr>
+          <td><div class="td-project">EA SPRING PROMO 2027</div><div class="td-client">Elizabeth Arden</div></td>
+          <td>$50,350</td>
+          <td>$25,175</td>
+          <td>$0</td>
+          <td>
+            <span class="mini-bar"><span class="mini-fill fill-green" style="width:50%"></span></span>
+            <span class="badge badge-green">50%</span>
+          </td>
+          <td style="color:#555;">May 15</td>
+        </tr>
+        <tr>
+          <td><div class="td-project">CLAIRE BENOIST COLGATE</div><div class="td-client">Judy Casey Inc</div></td>
+          <td>$16,500</td>
+          <td>$7,500</td>
+          <td>$2,416</td>
+          <td>
+            <span class="mini-bar"><span class="mini-fill fill-green" style="width:45%"></span></span>
+            <span class="badge badge-green">45%</span>
+          </td>
+          <td style="color:#555;">Apr 30</td>
+        </tr>
+        <tr>
+          <td><div class="td-project">GELEE PACKAGING UPDATE</div><div class="td-client">Gelée</div></td>
+          <td>$750</td>
+          <td>$0</td>
+          <td>$66</td>
+          <td>
+            <span class="mini-bar"><span class="mini-fill fill-green" style="width:9%"></span></span>
+            <span class="badge badge-green">9%</span>
+          </td>
+          <td style="color:#555;">—</td>
+        </tr>
+        <tr>
+          <td><div class="td-project">NEWPORT POV AI+RETOUCHING</div><div class="td-client">Ring</div></td>
+          <td>$1,900</td>
+          <td>$0</td>
+          <td>$0</td>
+          <td><span class="badge badge-gray">New</span></td>
+          <td style="color:#555;">Starts Apr 21</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Completed Not Invoiced -->
+  <div class="spacer">
+    <div class="section-label" style="color:#fbbf24;">⚠️ Completed — Not Yet Invoiced</div>
+    <div class="invoiced-card">
+      <div>
+        <div class="name">GOOGLE SPRINT PROOFING</div>
+        <div class="sub">Google · Completed Feb 2026 · Invoice outstanding</div>
+      </div>
+      <div class="amount">$2,800</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <span>"Committed" = allocated from approved quote · "Bills In" = vendor invoices received</span>
+    <a href="https://bespokedigital.scoro.com/" target="_blank">Open Scoro ↗</a>
+  </div>
+
+</div>
+</body>
+</html>
