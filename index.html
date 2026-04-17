@@ -8,8 +8,8 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-    background: #0f0f0f;
-    color: #e8e8e8;
+    background: #f5f4ef;
+    color: #1a1a1a;
     min-height: 100vh;
     padding: 32px 20px;
   }
@@ -17,15 +17,15 @@
 
   /* Header */
   .header { margin-bottom: 36px; }
-  .header h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; color: #fff; }
+  .header h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; color: #111; }
   .header .meta {
-    font-size: 13px; color: #555; margin-top: 6px;
+    font-size: 13px; color: #999; margin-top: 6px;
     display: flex; align-items: center; gap: 12px;
   }
   .live-badge {
     display: inline-flex; align-items: center; gap: 6px;
-    background: #1a1a1a; border: 1px solid #2a2a2a;
-    border-radius: 20px; padding: 3px 10px; font-size: 11px; color: #666;
+    background: #eceae3; border: 1px solid #dddbd2;
+    border-radius: 20px; padding: 3px 10px; font-size: 11px; color: #888;
   }
   .live-dot {
     width: 6px; height: 6px; background: #22c55e;
@@ -39,14 +39,14 @@
     gap: 12px; margin-bottom: 36px;
   }
   .summary-card {
-    background: #141414; border: 1px solid #1e1e1e;
+    background: #fff; border: 1px solid #e8e6df;
     border-radius: 10px; padding: 16px 18px;
   }
-  .summary-card .label { font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: #444; margin-bottom: 8px; }
-  .summary-card .value { font-size: 24px; font-weight: 700; color: #fff; }
-  .summary-card .sub { font-size: 11px; color: #555; margin-top: 4px; }
-  .summary-card.profit .value { color: #4ade80; }
-  .summary-card.risk .value { color: #f87171; }
+  .summary-card .label { font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: #aaa; margin-bottom: 8px; }
+  .summary-card .value { font-size: 24px; font-weight: 700; color: #111; }
+  .summary-card .sub { font-size: 11px; color: #aaa; margin-top: 4px; }
+  .summary-card.profit .value { color: #16a34a; }
+  .summary-card.risk .value { color: #dc2626; }
 
   /* Section labels */
   .section-label {
@@ -54,64 +54,64 @@
     text-transform: uppercase; margin-bottom: 12px;
     display: flex; align-items: center; gap: 8px;
   }
-  .section-label::after { content:''; flex:1; height:1px; background:#1e1e1e; }
+  .section-label::after { content:''; flex:1; height:1px; background:#e8e6df; }
 
   /* Alert cards */
   .alert-card {
     border-radius: 10px; padding: 18px 20px; margin-bottom: 10px;
     border: 1px solid transparent;
   }
-  .alert-card.red    { background: #1a0a0a; border-color: #3d1010; }
-  .alert-card.yellow { background: #131007; border-color: #2e2408; }
-  .alert-card.green  { background: #071a0e; border-color: #14532d; }
-  .alert-card.done   { background: #111207; border-color: #2a2808; }
+  .alert-card.red    { background: #fff5f5; border-color: #fca5a5; }
+  .alert-card.yellow { background: #fffbeb; border-color: #fcd34d; }
+  .alert-card.green  { background: #f0fdf4; border-color: #86efac; }
+  .alert-card.done   { background: #fefce8; border-color: #fde047; }
 
   .alert-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
-  .alert-card .project-name { font-size: 14px; font-weight: 700; color: #fff; }
-  .alert-card .client { font-size: 12px; color: #555; margin-top: 2px; }
+  .alert-card .project-name { font-size: 14px; font-weight: 700; color: #111; }
+  .alert-card .client { font-size: 12px; color: #999; margin-top: 2px; }
   .scoro-link {
-    font-size: 11px; color: #444; text-decoration: none;
-    border: 1px solid #222; border-radius: 6px; padding: 4px 10px;
+    font-size: 11px; color: #aaa; text-decoration: none;
+    border: 1px solid #e0ddd6; border-radius: 6px; padding: 4px 10px;
     white-space: nowrap; transition: all 0.15s;
   }
-  .scoro-link:hover { color: #888; border-color: #444; }
+  .scoro-link:hover { color: #555; border-color: #bbb; }
 
   /* Split bar */
   .split-bar { margin: 12px 0 8px; }
-  .split-bar-track { height: 8px; background: #1a1a1a; border-radius: 4px; overflow: hidden; display: flex; }
-  .split-overhead          { background: #2a2a2a; }
+  .split-bar-track { height: 8px; background: #e8e6df; border-radius: 4px; overflow: hidden; display: flex; }
+  .split-overhead          { background: #d1cfc6; }
   .split-spent             { background: #ef4444; }
   .split-spent.yellow-fill { background: #f59e0b; }
   .split-spent.green-fill  { background: #22c55e; }
-  .split-remaining         { background: #166534; }
+  .split-remaining         { background: #16a34a; }
   .split-labels {
     display: flex; justify-content: space-between;
-    font-size: 10px; color: #444; margin-top: 5px;
+    font-size: 10px; color: #aaa; margin-top: 5px;
   }
 
   /* Metrics row */
   .metrics { display: flex; gap: 24px; flex-wrap: wrap; margin-top: 10px; }
-  .metric .m-label { font-size: 10px; color: #444; text-transform: uppercase; letter-spacing: 0.8px; }
-  .metric .m-value { font-size: 15px; font-weight: 700; color: #e8e8e8; margin-top: 2px; }
-  .metric .m-value.red    { color: #f87171; }
-  .metric .m-value.yellow { color: #fbbf24; }
-  .metric .m-value.green  { color: #4ade80; }
-  .metric .m-value.muted  { color: #666; }
+  .metric .m-label { font-size: 10px; color: #aaa; text-transform: uppercase; letter-spacing: 0.8px; }
+  .metric .m-value { font-size: 15px; font-weight: 700; color: #1a1a1a; margin-top: 2px; }
+  .metric .m-value.red    { color: #dc2626; }
+  .metric .m-value.yellow { color: #d97706; }
+  .metric .m-value.green  { color: #16a34a; }
+  .metric .m-value.muted  { color: #bbb; }
 
-  .alert-note { font-size: 12px; color: #555; margin-top: 10px; font-style: italic; }
-  .alert-note.red    { color: #f87171; }
-  .alert-note.yellow { color: #fbbf24; }
+  .alert-note { font-size: 12px; color: #999; margin-top: 10px; font-style: italic; }
+  .alert-note.red    { color: #dc2626; }
+  .alert-note.yellow { color: #d97706; }
 
   .spacer { margin-bottom: 32px; }
 
   /* Footer */
   .footer {
-    margin-top: 48px; padding-top: 20px; border-top: 1px solid #1a1a1a;
-    font-size: 11px; color: #333;
+    margin-top: 48px; padding-top: 20px; border-top: 1px solid #e8e6df;
+    font-size: 11px; color: #bbb;
     display: flex; justify-content: space-between; align-items: center;
   }
-  .footer a { color: #444; text-decoration: none; }
-  .footer a:hover { color: #888; }
+  .footer a { color: #aaa; text-decoration: none; }
+  .footer a:hover { color: #555; }
 </style>
 </head>
 <body>
@@ -398,12 +398,12 @@
   <!-- Realized Profit Log -->
   <div class="spacer">
     <div class="section-label" style="color:#a3a317;">✅ Completed — Realized Profit</div>
-    <div style="background:#111; border:1px solid #1e1e1e; border-radius:10px; padding:18px 20px;">
+    <div style="background:#fff; border:1px solid #e8e6df; border-radius:10px; padding:18px 20px;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-        <span style="font-size:12px; color:#555;">Projects fully invoiced — profit is locked in</span>
-        <span style="font-size:20px; font-weight:700; color:#4ade80;">$0 <span style="font-size:12px; font-weight:400; color:#555;">total realized</span></span>
+        <span style="font-size:12px; color:#999;">Projects fully invoiced — profit is locked in</span>
+        <span style="font-size:20px; font-weight:700; color:#16a34a;">$0 <span style="font-size:12px; font-weight:400; color:#aaa;">total realized</span></span>
       </div>
-      <div style="font-size:12px; color:#444; font-style:italic;">No completed projects logged yet. Realized profit will accumulate here as projects are invoiced.</div>
+      <div style="font-size:12px; color:#bbb; font-style:italic;">No completed projects logged yet. Realized profit will accumulate here as projects are invoiced.</div>
     </div>
   </div>
 
